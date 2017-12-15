@@ -1,11 +1,14 @@
 <template>
-    <div>Test</div>
+    <nav>
+        <router-link :to="{name: 'Index'}">Home</router-link>
+        <router-link :to="{name: 'Meteo'}">Meteo</router-link>
+    </nav>
 </template>
 
 <script>
 
     export default {
-        name: 'Header',
+        name: 'AppHeader',
 
         data() {
             return {

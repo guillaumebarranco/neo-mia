@@ -1,5 +1,6 @@
 <template>
     <div class="hello">
+        <mia></mia>
         <mia-header></mia-header>
         <h1>{{ msg }}</h1>
     </div>
@@ -9,13 +10,15 @@
 
     import Vue from 'vue';
     import MiaHeader from './MiaHeader';
+    import Mia from './Mia';
 
-    Vue.component('mia-header', MiaHeader);
+    Vue.component('mia', Mia);
 
     export default {
         name: 'HelloWorld',
         components: {
             MiaHeader,
+            Mia,
         },
 
         data() {
