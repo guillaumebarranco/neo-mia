@@ -1,4 +1,5 @@
 import { audioCommands, customAudioCommands } from './audio';
+import { apiCommands } from './api';
 
 const commands = [];
 
@@ -19,6 +20,16 @@ Object.keys(customAudioCommands).forEach((key) => {
         userSaid: key,
         type: 'audio',
         emotion: true,
+    });
+});
+
+Object.keys(apiCommands).forEach((key) => {
+
+    commands.push({
+        content: apiCommands[key],
+        userSaid: key,
+        type: 'api',
+        emotion: false,
     });
 });
 

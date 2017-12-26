@@ -15,7 +15,7 @@ export function cleanCommand(text) {
 }
 
 function rand(min, max) {
-    return (Math.floor((max-min)*Math.random())+min);
+    return (Math.floor((max - min) * Math.random()) + min);
 }
 
 function returnRandomCommandFromArray(answers) {
@@ -24,45 +24,90 @@ function returnRandomCommandFromArray(answers) {
 
 export function searchForMatchingAnswers(instructions, currentEmotion) {
 
-    let commandFound = {
-        userSaid: '',
-        content: '',
-        type: '',
-    };
+    return new Promise((resolve, reject) => {
 
-    // emotionless commands
-    commands.filter(command => !command.emotion).forEach(command => {
+        let commandFound = {
+            userSaid: '',
+            content: '',
+            type: '',
+        };
 
-        const commandMatch = cleanCommand(command.userSaid);
+        // emotionless commands
+        commands.filter(command => !command.emotion).forEach(command => {
 
-        if(instructions.includes(commandMatch)) {
-            commandFound = command;
-        }
-    });
+            const commandMatch = cleanCommand(command.userSaid);
 
-    // emotionfull commands
-    commands.filter(command => command.emotion).forEach(command => {
-
-        const commandMatch = cleanCommand(command.userSaid);
-
-        if(instructions.includes(commandMatch)) {
-
-            let content = "";
-
-            const emotionAnswers = command.content[currentEmotion];
-            console.log('emotionAnswers', emotionAnswers);
-
-            if(!emotionAnswers.length) {
-                content = command.content.default;
-            } else {
-                content = returnRandomCommandFromArray(emotionAnswers);
+            if(instructions.includes(commandMatch)) {
+                commandFound = command;
             }
+        });
 
-            console.log(content);
-            commandFound = command;
-            commandFound.content = content;
+        // emotionfull commands
+        commands.filter(command => command.emotion).forEach(command => {
+
+            const commandMatch = cleanCommand(command.userSaid);
+
+            if(instructions.includes(commandMatch)) {
+
+                let content = "";
+
+                const emotionAnswers = command.content[currentEmotion];
+                console.log('emotionAnswers', emotionAnswers);
+
+                if(!emotionAnswers.length) {
+                    content = command.content.default;
+                } else {
+                    content = returnRandomCommandFromArray(emotionAnswers);
+                }
+
+                console.log(content);
+                commandFound = command;
+                commandFound.content = content;
+            }
+        });
+
+        if(commandFound.type === 'api') {
+
+            const options = commandFound.content;
+
+            console.log('options', options);
+
+            fetch(options.apiUrl, {
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                },
+                method: options.method,
+                body: JSON.stringify(options.data),
+            })
+            .then(res => res.json())
+            .then(res => {
+
+                if(res.status === 'success') {
+
+                    resolve({
+                        content: options.successMessage,
+                        type: 'audio',
+                    });
+
+                } else if(res.status && res.message) {
+
+                    resolve({
+                        content: res.message,
+                        type: 'audio',
+                    });
+
+                } else {
+
+                    reject({
+                        content: 'Un problème est survenu.',
+                        type: 'audio',
+                    });
+                }
+            });
+
+        } else {
+            resolve(commandFound);
         }
     });
-
-    return commandFound;
 }

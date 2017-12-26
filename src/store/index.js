@@ -10,7 +10,7 @@ Vue.use(Vuex);
 const state = {
     instructions: [],
     command: {},
-    currentEmotion: 'happy'
+    currentEmotion: 'happy',
 };
 
 export default new Vuex.Store({

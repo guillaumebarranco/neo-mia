@@ -48,7 +48,7 @@
                             autoRestart: true,
                         });
 
-                        resolve(['Tu fais quoi ?', 'test micro']);
+                        resolve(['musique', 'test micro']);
 
                         // annyang.addCallback('result', (userSaid) => {
                         //     console.log('userSaid', userSaid);

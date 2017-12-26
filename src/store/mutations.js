@@ -33,9 +33,13 @@ function updateInstructions(state, instructions) {
 
 function getMatchingAnswer(state) {
 
-    const commandFound = searchForMatchingAnswers(state.instructions, state.currentEmotion);
+    searchForMatchingAnswers(state.instructions, state.currentEmotion).then(commandFound => {
 
-    console.log('commandFound', commandFound);
+        console.log('commandFound', commandFound);
 
-    Vue.set(state.command, 0, commandFound);
+        Vue.set(state.command, 0, commandFound);
+
+    }).catch(err => {
+        console.log('err get matching answer', err);
+    });
 }
