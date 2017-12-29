@@ -11,3 +11,7 @@ export const sanitizeInstructions = ({ commit }, payload) => {
 export const updateInstructions = ({ commit }, payload) => {
     commit(types.UPDATE_INSTRUCTIONS, payload);
 };
+
+export const getFavouritesMangasSuccess = ({ commit }, payload) => {
+    commit(types.GET_FAVOURITES_MANGAS_SUCCESS, payload);
+};

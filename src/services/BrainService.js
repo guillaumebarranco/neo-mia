@@ -1,4 +1,5 @@
 import { getCommands } from '../commands/index';
+import store from '../store/index';
 
 export const test = 'test';
 
@@ -12,6 +13,63 @@ export function cleanCommand(text) {
     commandFormated = commandFormated.trim();
 
     return commandFormated;
+}
+
+function handleApiResponse(options) {
+
+    return new Promise((resolve, reject) => {
+
+        const fetchOptions = {
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+            },
+            method: options.method,
+        };
+
+        if(options.method === 'POST') {
+            fetchOptions.body = JSON.stringify(options.data);
+        }
+
+        fetch(options.apiUrl, fetchOptions)
+        .then(res => res.json())
+        .then(res => {
+
+            if(res.status === 'success') {
+
+                if(options.dispatcher) {
+
+                    store.dispatch(options.dispatcher, {
+                        successMessage: options.successMessage,
+                        data: res.data,
+                    });
+
+                    reject('Tout va bien, don\'t worry !');
+
+                } else {
+
+                    resolve({
+                        content: options.successMessage,
+                        type: 'audio',
+                    });
+                }
+
+            } else if(res.status && res.message) {
+
+                resolve({
+                    content: res.message,
+                    type: 'audio',
+                });
+
+            } else {
+
+                reject({
+                    content: 'Un problème est survenu.',
+                    type: 'audio',
+                });
+            }
+        });
+    });
 }
 
 function rand(min, max) {
@@ -72,41 +130,9 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
 
                 const options = commandFound.content;
 
-                console.log('options', options);
-
-                fetch(options.apiUrl, {
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json',
-                    },
-                    method: options.method,
-                    body: JSON.stringify(options.data),
-                })
-                .then(res => res.json())
-                .then(res => {
-
-                    if(res.status === 'success') {
-
-                        resolve({
-                            content: options.successMessage,
-                            type: 'audio',
-                        });
-
-                    } else if(res.status && res.message) {
-
-                        resolve({
-                            content: res.message,
-                            type: 'audio',
-                        });
-
-                    } else {
-
-                        reject({
-                            content: 'Un problème est survenu.',
-                            type: 'audio',
-                        });
-                    }
-                });
+                handleApiResponse(options)
+                    .then(res => resolve(res))
+                    .catch(err => reject(err));
 
             } else {
                 resolve(commandFound);

@@ -15,6 +15,10 @@ export default {
     [types.GET_MATCHING_ANSWER](state, instructions) {
         getMatchingAnswer(state, instructions);
     },
+
+    [types.GET_FAVOURITES_MANGAS_SUCCESS](state, data) {
+        getFavouritesMangasSuccess(state, data);
+    },
 };
 
 function sanitizeInstructions(state) {
@@ -41,5 +45,15 @@ function getMatchingAnswer(state) {
 
     }).catch(err => {
         console.log('err get matching answer', err);
+    });
+}
+
+function getFavouritesMangasSuccess(state, options) {
+
+    const result = options.data.join(', ');
+
+    Vue.set(state.command, 0, {
+        content: `${options.successMessage} ${result}`,
+        type: 'audio',
     });
 }

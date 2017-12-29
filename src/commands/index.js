@@ -11,7 +11,7 @@ function generateCommand(content, userSaid, type = 'audio', emotion = false) {
         content,
         userSaid,
         type,
-        emotion
+        emotion,
     };
 }
 
@@ -22,9 +22,9 @@ function addCommandsFromObject(commandsObject, type = 'audio', emotion = false) 
     });
 }
 
-export const getCommands = () => {
+export const getCommands = () =>
 
-    new Promise((resolve, reject) => {
+    new Promise(resolve => {
 
         addCommandsFromObject(audioCommands);
         addCommandsFromObject(customAudioCommands, 'audio', true);
@@ -42,5 +42,5 @@ export const getCommands = () => {
 
             resolve(commands);
         });
-    });
-};
+    })
+;
