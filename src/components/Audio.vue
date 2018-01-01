@@ -38,36 +38,31 @@
 
             loadAudio() {
 
-                return new Promise((resolve, reject) => {
+                if (annyang) {
 
-                    if (annyang) {
+                    annyang.setLanguage('fr-FR');
 
-                        annyang.setLanguage('fr-FR');
+                    annyang.start({
+                        autoRestart: true,
+                    });
 
-                        annyang.start({
-                            autoRestart: true,
-                        });
+                    // const userSaid = ['playlist sexy', 'test micro'];
 
-                        resolve(['musique', 'test micro']);
+                    annyang.addCallback('result', (userSaid) => {
+                        console.log('userSaid', userSaid);
 
-                        // annyang.addCallback('result', (userSaid) => {
-                        //     console.log('userSaid', userSaid);
-                        //     resolve(userSaid);
-                        // });
+                        this.$store.dispatch('updateInstructions', userSaid);
+                        this.$store.dispatch('sanitizeInstructions');
+                        this.$store.dispatch('getMatchingAnswer');
+                    });
 
-                    } else {
-                        reject('annyang not charged');
-                    }
-                });
+                } else {
+                    console.log('annyang not charged');
+                }
             },
         },
         created() {
-
-            this.loadAudio().then(userSaid => {
-                this.$store.dispatch('updateInstructions', userSaid);
-                this.$store.dispatch('sanitizeInstructions');
-                this.$store.dispatch('getMatchingAnswer');
-            });
+            this.loadAudio();
         },
     };
 

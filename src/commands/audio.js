@@ -1,3 +1,5 @@
+import { makeCommandsFromMultipleText } from './resources';
+
 const firstAudioCommands = {
     'Bonjour Mia && Hello'              : 'Bonjour ! Comment allez-vous ?',
     'Merci Mia'                         : 'Je vous en prie.',
@@ -23,20 +25,7 @@ export const customAudioCommands = {
     'Tu te sens comment ?'                : howDoYouFeel(),
 };
 
-const waysToSayPattern = ' && ';
-export const audioCommands = Object.keys(firstAudioCommands).reduce((memo, key) => {
-
-    const command = firstAudioCommands[key];
-
-    if(key.includes(waysToSayPattern)) {
-        const waysToSay = key.split(waysToSayPattern);
-        waysToSay.forEach(way => { memo[way] = command; });
-    } else {
-        memo[key] = command;
-    }
-
-    return memo;
-}, {});
+export const audioCommands = makeCommandsFromMultipleText(firstAudioCommands);
 
 function whatAreYouDoing() {
 

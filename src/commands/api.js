@@ -1,3 +1,5 @@
+import { makeCommandsFromMultipleText } from './resources';
+
 export const test = "";
 
 const miaSonerezehApi = "http://92.222.34.194:2612";
@@ -26,6 +28,45 @@ export const apiCommands = {
     },
 };
 
+function getMultipleSonerezhCommandText(title) {
+
+    let text = `Playlist ${title}`;
+
+    switch(title.toLowerCase()) {
+
+    case 'rap lourd': {
+        text += " && Mets nous du lourd !";
+        break;
+    }
+
+    case 'rap fun': {
+        text += " && Mets nous de la musique marrante !";
+        break;
+    }
+
+    case 'sexy': {
+        text += " && Mets nous quelque chose de sexy !";
+        break;
+    }
+
+    case 'golden age': {
+        text += " && Mets moi du bon vieux rap !";
+        break;
+    }
+
+    case 'rap posé': {
+        text += " && Mets moi du rap posé !";
+        break;
+    }
+
+    default: {
+        return text;
+    }
+    }
+
+    return text;
+}
+
 export const getSonerezhCommands = () =>
 
     fetch(`${miaSonerezehApi}/playlists`, {
@@ -38,7 +79,7 @@ export const getSonerezhCommands = () =>
 
         res.forEach(el => {
 
-            const commandText = `Playlist ${el.title}`;
+            const commandText = getMultipleSonerezhCommandText(el.title);
 
             commands[commandText] = {
                 apiUrl: `${miaSonerezehApi}/playlist`,
@@ -53,6 +94,6 @@ export const getSonerezhCommands = () =>
             };
         });
 
-        return commands;
+        return makeCommandsFromMultipleText(commands);
     })
 ;
