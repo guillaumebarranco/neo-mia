@@ -11,6 +11,7 @@ const state = {
     instructions: [],
     command: {},
     currentEmotion: 'happy',
+    playlists: [],
 };
 
 export default new Vuex.Store({

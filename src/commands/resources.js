@@ -131,5 +131,11 @@ export const makeCommandsFromMultipleText = (commands) => {
         return doThisAgain(commands4);
     }
 
-    return commands4;
+    const finalCommands = Object.keys(commands4).reduce((memo, key) => {
+        memo[key] = commands4[key];
+        memo[`Mia ${key}`] = commands4[key];
+        return memo;
+    }, {});
+
+    return finalCommands;
 };

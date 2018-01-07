@@ -151,3 +151,31 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
         });
     });
 }
+
+export function playPlaylist(playlistId) {
+
+    return new Promise((resolve) => {
+
+        getCommands().then(commands => {
+
+            let launched = false;
+
+            commands.forEach(command => {
+
+                if(
+                    command.type === 'api'
+                    && command.content.data
+                    && command.content.data.playlistId
+                    && command.content.data.playlistId === playlistId
+                    && !launched
+                ) {
+
+                    launched = true;
+
+                    handleApiResponse(command.content)
+                        .then(res => resolve(res));
+                }
+            });
+        });
+    });
+}

@@ -15,3 +15,11 @@ export const updateInstructions = ({ commit }, payload) => {
 export const getFavouritesMangasSuccess = ({ commit }, payload) => {
     commit(types.GET_FAVOURITES_MANGAS_SUCCESS, payload);
 };
+
+export const getPlaylistsSuccess = ({ commit }, payload) => {
+    commit(types.GET_PLAYLISTS_SUCCESS, payload);
+};
+
+export const launchPlaylist = ({ commit }, payload) => {
+    commit(types.LAUNCH_PLAYLIST, payload);
+};

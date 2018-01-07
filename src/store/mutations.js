@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import * as types from './mutation-types';
-import { cleanCommand, searchForMatchingAnswers } from '../services/BrainService';
+import { cleanCommand, searchForMatchingAnswers, playPlaylist } from '../services/BrainService';
 
 export default {
 
@@ -18,6 +18,14 @@ export default {
 
     [types.GET_FAVOURITES_MANGAS_SUCCESS](state, data) {
         getFavouritesMangasSuccess(state, data);
+    },
+
+    [types.GET_PLAYLISTS_SUCCESS](state, data) {
+        getPlaylistsSuccess(state, data);
+    },
+
+    [types.LAUNCH_PLAYLIST](state, data) {
+        launchPlaylist(state, data);
     },
 };
 
@@ -56,4 +64,14 @@ function getFavouritesMangasSuccess(state, options) {
         content: `${options.successMessage} ${result}`,
         type: 'audio',
     });
+}
+
+function getPlaylistsSuccess(state, playlists) {
+
+    playlists.forEach((playlist, i) =>
+        Vue.set(state.playlists, i, playlist));
+}
+
+function launchPlaylist(state, playlistId) {
+    playPlaylist(playlistId);
 }
