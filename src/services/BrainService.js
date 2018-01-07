@@ -1,4 +1,5 @@
 import { getCommands } from '../commands/index';
+import { customIncludes } from '../commands/resources';
 import store from '../store/index';
 
 export const test = 'test';
@@ -86,6 +87,8 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
 
         getCommands().then(commands => {
 
+            console.log('commands', commands);
+
             let commandFound = {
                 userSaid: '',
                 content: '',
@@ -96,9 +99,18 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
             commands.filter(command => !command.emotion).forEach(command => {
 
                 const commandMatch = cleanCommand(command.userSaid);
+                const response = customIncludes(instructions, commandMatch);
 
-                if(instructions.includes(commandMatch)) {
+                if(response) {
                     commandFound = command;
+
+                    if(response !== true && commandFound.type === 'api') {
+                        commandFound.content.apiUrl = commandFound.content.apiUrl
+                        .replace(response.variableToReplace, response.value);
+
+                        commandFound.content.successMessage = commandFound.content.successMessage
+                        .replace(response.variableToReplace, response.value);
+                    }
                 }
             });
 
@@ -106,13 +118,13 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
             commands.filter(command => command.emotion).forEach(command => {
 
                 const commandMatch = cleanCommand(command.userSaid);
+                const response = customIncludes(instructions, commandMatch);
 
-                if(instructions.includes(commandMatch)) {
+                if(response) {
 
                     let content = "";
 
                     const emotionAnswers = command.content[currentEmotion];
-                    console.log('emotionAnswers', emotionAnswers);
 
                     if(!emotionAnswers.length) {
                         content = command.content.default;
@@ -120,7 +132,6 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
                         content = returnRandomCommandFromArray(emotionAnswers);
                     }
 
-                    console.log(content);
                     commandFound = command;
                     commandFound.content = content;
                 }

@@ -28,7 +28,9 @@
             ]),
 
             getTranslatedCommand(text) {
+                // window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
                 const encodedText = urlencode(text);
+                // return "";
                 return `http://translate.google.com/translate_tts?tl=fr&client=tw-ob&q=${encodedText}`;
             },
 
@@ -46,15 +48,15 @@
                         autoRestart: true,
                     });
 
-                    // const userSaid = ['playlist sexy', 'test micro'];
+                    const userSaid = ['quels sont les mangas au dessus de 8', 'test micro'];
 
-                    annyang.addCallback('result', (userSaid) => {
-                        console.log('userSaid', userSaid);
+                    // annyang.addCallback('result', (userSaid) => {
+                    //     console.log('userSaid', userSaid);
 
-                        this.$store.dispatch('updateInstructions', userSaid);
-                        this.$store.dispatch('sanitizeInstructions');
-                        this.$store.dispatch('getMatchingAnswer');
-                    });
+                    this.$store.dispatch('updateInstructions', userSaid);
+                    this.$store.dispatch('sanitizeInstructions');
+                    this.$store.dispatch('getMatchingAnswer');
+                    // });
 
                 } else {
                     console.log('annyang not charged');

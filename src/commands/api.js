@@ -3,15 +3,22 @@ import { makeCommandsFromMultipleText } from './resources';
 export const test = "";
 
 const miaSonerezehApi = "http://92.222.34.194:2612";
-const miaMangaApi = "http://92.222.34.194:2812";
+const miaMangaApi = "http://localhost:2812";
 
-export const apiCommands = {
+export const apiCommands = makeCommandsFromMultipleText({
 
-    'Quels sont mes mangas favoris ?': {
-        apiUrl: `${miaMangaApi}/mangas/all`,
+    'Quels sont mes mangas (favoris)(préférés) ? && Donne-moi mes mangas (favoris)(préférés)': {
+        apiUrl: `${miaMangaApi}/favourites`,
         method: 'GET',
         data: { },
         successMessage: "Vos mangas favoris sont ",
+        dispatcher: "getFavouritesMangasSuccess",
+    },
+    'Quels sont les mangas au-dessus de {{min}}': {
+        apiUrl: `${miaMangaApi}/highscores?min={{min}}`,
+        method: 'GET',
+        data: { },
+        successMessage: "Les mangas au-dessus de {{min}} sont ",
         dispatcher: "getFavouritesMangasSuccess",
     },
 
@@ -26,7 +33,7 @@ export const apiCommands = {
         successMessage: "Votre playlist a bien été lancée.",
         dispatcher: null,
     },
-};
+});
 
 function getMultipleSonerezhCommandText(title) {
 
