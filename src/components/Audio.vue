@@ -48,7 +48,7 @@
                         autoRestart: true,
                     });
 
-                    const userSaid = ['quels sont les mangas au dessus de 8', 'test micro'];
+                    const userSaid = ['envoies nous du bon vieux rap', 'test micro'];
 
                     // annyang.addCallback('result', (userSaid) => {
                     //     console.log('userSaid', userSaid);

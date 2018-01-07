@@ -31,10 +31,16 @@ export const customIncludes = (userSaid, commandUserSaid) => {
     return finalValue;
 };
 
+function doThisAgain(commands) {
+    return makeCommandsFromMultipleText(commands);
+}
+
 export const makeCommandsFromMultipleText = (commands) => {
 
+    // First we create new commands for commands having multiple sentences possibles
+    // First sentence && second sentence for command 'launch that'
+    // Become First sentence => 'launch that'; Second sentence => 'launch that' (2 commands)
     const waysToSayPattern = ' && ';
-
     const commands2 = Object.keys(commands).reduce((memo, key) => {
 
         const command = commands[key];
@@ -49,28 +55,33 @@ export const makeCommandsFromMultipleText = (commands) => {
         return memo;
     }, {});
 
-    const waysToHaveMultipleWords = /\((.*)\)\((.*)\)/;
-    const patternToReplace = "adbc";
-
+    // Then we create new commands for commands having optionnals words
+    // Bring me a [good] tea will become
+    // Bring me a good tea; Bring me a tea (2 commands)
+    const waysToHaveOptionnalWord = /\[([^\]]+)]/;
+    const patternToReplaceOptionnal = "pdbq";
     const commands3 = Object.keys(commands2).reduce((memo, key) => {
 
         const command = commands2[key];
-        const resultsFromRegex = key.match(waysToHaveMultipleWords);
+        const resultsFromRegex = key.match(waysToHaveOptionnalWord);
 
         if(resultsFromRegex) {
 
             const toRemoveFromSentence = resultsFromRegex[0];
-            const sentenceWithoutWords = key.replace(toRemoveFromSentence, patternToReplace);
+            const sentenceWithoutWord = key
+                .replace(toRemoveFromSentence, patternToReplaceOptionnal);
 
-            const waysToSay = [];
+            const simpleSentence = sentenceWithoutWord
+                .replace(patternToReplaceOptionnal, '')
+                .replace('  ', ' ');
 
-            for (let i = 0; i < resultsFromRegex.length; i++) {
-                if(i !== 0) waysToSay.push(resultsFromRegex[i]);
-            }
+            memo[simpleSentence] = command;
 
-            waysToSay.forEach(way => {
-                memo[sentenceWithoutWords.replace(patternToReplace, way)] = command;
-            });
+            const newSentence = sentenceWithoutWord
+                .replace(patternToReplaceOptionnal, resultsFromRegex[1]);
+
+            memo[newSentence] = command;
+
         } else {
             memo[key] = command;
         }
@@ -78,5 +89,47 @@ export const makeCommandsFromMultipleText = (commands) => {
         return memo;
     }, {});
 
-    return commands3;
+    // Then we create new commands for commands having multiple words in same sentence
+    const waysToHaveMultipleWords = /\(([^)]+)\)/g;
+    const patternToReplaceMultiple = "adbc";
+    const commands4 = Object.keys(commands3).reduce((memo, key) => {
+
+        const command = commands3[key];
+        const resultsFromRegex = key.match(waysToHaveMultipleWords);
+
+        if(resultsFromRegex) {
+
+            resultsFromRegex.forEach(element => {
+
+                const toRemoveFromSentence = element;
+                const sentenceWithoutWords =
+                    key.replace(toRemoveFromSentence, patternToReplaceMultiple);
+
+                const waysToSay = element.replace('(', '').replace(')', '').split('|');
+
+                waysToSay.forEach(way => {
+                    memo[sentenceWithoutWords.replace(patternToReplaceMultiple, way)] = command;
+                });
+            });
+
+        } else {
+            memo[key] = command;
+        }
+
+        return memo;
+    }, {});
+
+    let needToDoThisAgain = false;
+
+    Object.keys(commands4).forEach((key) => {
+        if(key.match(waysToHaveMultipleWords) || key.match(waysToHaveOptionnalWord)) {
+            needToDoThisAgain = true;
+        }
+    });
+
+    if(needToDoThisAgain) {
+        return doThisAgain(commands4);
+    }
+
+    return commands4;
 };

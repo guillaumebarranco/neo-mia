@@ -7,7 +7,7 @@ const miaMangaApi = "http://localhost:2812";
 
 export const apiCommands = makeCommandsFromMultipleText({
 
-    'Quels sont mes mangas (favoris)(préférés) ? && Donne-moi mes mangas (favoris)(préférés)': {
+    'Quels sont mes mangas (favoris|préférés) ? && Donne-moi mes mangas (favoris|préférés)': {
         apiUrl: `${miaMangaApi}/favourites`,
         method: 'GET',
         data: { },
@@ -38,31 +38,32 @@ export const apiCommands = makeCommandsFromMultipleText({
 function getMultipleSonerezhCommandText(title) {
 
     let text = `Playlist ${title}`;
+    const playText = '(Mets|Envoies) (moi|nous)';
 
     switch(title.toLowerCase()) {
 
     case 'rap lourd': {
-        text += " && Mets nous du lourd !";
+        text += ` && ${playText} du lourd !`;
         break;
     }
 
     case 'rap fun': {
-        text += " && Mets nous de la musique marrante !";
+        text += ` && ${playText} de la musique marrante !`;
         break;
     }
 
     case 'sexy': {
-        text += " && Mets nous quelque chose de sexy !";
+        text += ` && ${playText} quelque chose de sexy !`;
         break;
     }
 
     case 'golden age': {
-        text += " && Mets moi du bon vieux rap !";
+        text += ` && ${playText} du bon [vieux] rap !`;
         break;
     }
 
     case 'rap posé': {
-        text += " && Mets moi du rap posé !";
+        text += ` && ${playText} du rap (posé|tranquille) !`;
         break;
     }
 
