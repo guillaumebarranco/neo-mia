@@ -48,7 +48,7 @@
                         autoRestart: true,
                     });
 
-                    const userSaid = ['envoies nous du bon vieux rap', 'test micro'];
+                    const userSaid = ['test', 'test micro'];
 
                     // annyang.addCallback('result', (userSaid) => {
                     //     console.log('userSaid', userSaid);

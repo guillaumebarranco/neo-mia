@@ -1,9 +1,22 @@
 <template>
-    <ul>
-        <li v-for="playlist in playlists">
-            <button v-on:click="launchPlaylist(playlist)">{{ playlist.title }}</button>
-        </li>
-    </ul>
+    <div>
+        <slot></slot>
+        <ul v-if="!isFullScreen" class="not-fullscreen">
+            <li v-for="playlist in playlists">
+                <button v-on:click="launchPlaylist(playlist)">{{ playlist.title }}</button>
+            </li>
+        </ul>
+
+        <div v-if="isFullScreen">
+            <h1>Playlists</h1>
+
+            <ul>
+                <li v-for="playlist in playlists">
+                    <button v-on:click="launchPlaylist(playlist)">{{ playlist.title }}</button>
+                </li>
+            </ul>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -13,10 +26,12 @@
     export default {
         name: 'Playlists',
 
+        props: ['isFullScreen'],
+
         data() {
+
             this.getPlaylists();
-            return {
-            };
+            return {};
         },
 
         computed: {
@@ -52,6 +67,7 @@
 
     ul {
         padding: 10px;
+        margin: 0;
         display: flex;
         flex-wrap: wrap;
     }
@@ -67,6 +83,11 @@
         width: 150px;
         padding: 10px 0;
         cursor: pointer;
+    }
+
+    .not-fullscreen button {
+        width: 100px;
+        height: 50px;
     }
 
 </style>
