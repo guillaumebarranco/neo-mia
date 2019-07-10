@@ -1,14 +1,31 @@
+import { Command } from '@/models/command';
+
 import Vue from 'vue';
 import Vuex from 'vuex';
-import * as getters from './getters';
+
 import * as actions from './actions';
+import * as getters from './getters';
 import mutations from './mutations';
 
 Vue.use(Vuex);
 
-const state = {
+export interface AppState {
+  instructions: string[];
+  command: Command;
+  currentEmotion: string;
+  playlists: any[];
+}
+
+const state: AppState = {
   instructions: [],
-  command: {},
+  command: {
+    content: {
+      apiUrl: '',
+      successMessage: '',
+    },
+    type: '',
+    userSaid: '',
+  },
   currentEmotion: 'happy',
   playlists: [],
 };

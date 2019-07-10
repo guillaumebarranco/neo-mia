@@ -1,10 +1,12 @@
+import { Command, CommandContent } from '@/models/command';
+
 import { getCommands } from '../commands/index';
 import { customIncludes } from '../commands/resources';
 import store from '../store/index';
 
 export const test = 'test';
 
-export function cleanCommand(text) {
+export function cleanCommand(text: string): string {
   let commandFormated = text.toLowerCase();
   commandFormated = commandFormated.replace(/-/g, ' ');
   commandFormated = commandFormated
@@ -17,9 +19,9 @@ export function cleanCommand(text) {
   return commandFormated;
 }
 
-function handleApiResponse(options) {
+function handleApiResponse(options: any) {
   return new Promise((resolve, reject) => {
-    const fetchOptions = {
+    const fetchOptions: any = {
       headers: {
         Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
@@ -32,8 +34,8 @@ function handleApiResponse(options) {
     }
 
     fetch(options.apiUrl, fetchOptions)
-      .then(res => res.json())
-      .then(res => {
+      .then((res: any) => res.json())
+      .then((res: any) => {
         if (res.status === 'success') {
           if (options.dispatcher) {
             store.dispatch(options.dispatcher, {
@@ -63,31 +65,37 @@ function handleApiResponse(options) {
   });
 }
 
-function rand(min, max) {
+function rand(min: number, max: number) {
   return Math.floor((max - min) * Math.random()) + min;
 }
 
-function returnRandomCommandFromArray(answers) {
+function returnRandomCommandFromArray(answers: any[]): any {
   return answers[rand(0, answers.length)];
 }
 
-export function searchForMatchingAnswers(instructions, currentEmotion) {
+export function searchForMatchingAnswers(
+  instructions: string[],
+  currentEmotion: string
+): Promise<Command> {
   return new Promise((resolve, reject) => {
-    getCommands().then(commands => {
+    getCommands().then((commands: any) => {
       console.log('commands', commands);
 
-      let commandFound = {
+      let commandFound: Command = {
         userSaid: '',
-        content: '',
+        content: {
+          apiUrl: '',
+          successMessage: '',
+        },
         type: '',
       };
 
       // emotionless commands
       commands
-        .filter(command => !command.emotion)
-        .forEach(command => {
-          const commandMatch = cleanCommand(command.userSaid);
-          const response = customIncludes(instructions, commandMatch);
+        .filter((command: any) => !command.emotion)
+        .forEach((command: any) => {
+          const commandMatch: any = cleanCommand(command.userSaid);
+          const response: any = customIncludes(instructions, commandMatch);
 
           if (response) {
             commandFound = command;
@@ -108,13 +116,13 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
 
       // emotionfull commands
       commands
-        .filter(command => command.emotion)
-        .forEach(command => {
+        .filter((command: any) => command.emotion)
+        .forEach((command: any) => {
           const commandMatch = cleanCommand(command.userSaid);
           const response = customIncludes(instructions, commandMatch);
 
           if (response) {
-            let content = '';
+            let content: CommandContent;
 
             const emotionAnswers = command.content[currentEmotion];
 
@@ -133,8 +141,8 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
         const options = commandFound.content;
 
         handleApiResponse(options)
-          .then(res => resolve(res))
-          .catch(err => reject(err));
+          .then((res: any) => resolve(res))
+          .catch((err: any) => reject(err));
       } else {
         resolve(commandFound);
       }
@@ -142,12 +150,12 @@ export function searchForMatchingAnswers(instructions, currentEmotion) {
   });
 }
 
-export function playPlaylist(playlistId) {
-  return new Promise(resolve => {
-    getCommands().then(commands => {
+export function playPlaylist(playlistId: number) {
+  return new Promise((resolve: any) => {
+    getCommands().then((commands: any) => {
       let launched = false;
 
-      commands.forEach(command => {
+      commands.forEach((command: any) => {
         if (
           command.type === 'api' &&
           command.content.data &&
@@ -157,7 +165,7 @@ export function playPlaylist(playlistId) {
         ) {
           launched = true;
 
-          handleApiResponse(command.content).then(res => resolve(res));
+          handleApiResponse(command.content).then((res: any) => resolve(res));
         }
       });
     });

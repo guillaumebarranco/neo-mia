@@ -16,7 +16,6 @@ Vue.component("mia", Mia);
 Vue.component("mia-header", Header);
 Vue.component("mia-audio", Audio);
 
-
 export default {
   name: "Home",
   components: {
@@ -40,4 +39,3 @@ h2 {
   font-weight: normal;
 }
 </style>
-

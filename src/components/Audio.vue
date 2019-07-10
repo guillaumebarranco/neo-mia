@@ -23,8 +23,9 @@ export default {
     getTranslatedCommand(text) {
       // window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
       const encodedText = urlencode(text);
-      // return "";
-      return `http://translate.google.com/translate_tts?tl=fr&client=tw-ob&q=${encodedText}`;
+      console.log("encodedText", encodedText);
+      return "";
+      // return `http://translate.google.com/translate_tts?tl=fr&client=tw-ob&q=${encodedText}`;
     },
 
     isAudio(command) {
@@ -39,12 +40,12 @@ export default {
           autoRestart: true
         });
 
-        const userSaid = ["test", "test micro"];
+        const userSaid = ["envoies nous du bon vieux rap"];
 
         // annyang.addCallback('result', (userSaid) => {
         //     console.log('userSaid', userSaid);
 
-        this.$store.dispatch("updateInstructions", userSaid);
+        this.$store.dispatch("updateInstructions", userSaid, { root: true });
         this.$store.dispatch("sanitizeInstructions");
         this.$store.dispatch("getMatchingAnswer");
         // });

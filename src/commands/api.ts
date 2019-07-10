@@ -36,7 +36,7 @@ export const apiCommands = makeCommandsFromMultipleText({
 
 function getMultipleSonerezhCommandText(title: string): string {
   let text = `Playlist ${title}`;
-  const playText = '(Mets|Envoies) (moi|nous)';
+  const playText = '(Mets|Envoies|Balance) (moi|nous)';
 
   switch (title.toLowerCase()) {
     case 'rap lourd': {
@@ -54,13 +54,28 @@ function getMultipleSonerezhCommandText(title: string): string {
       break;
     }
 
+    case 'chanson française': {
+      text += ` && ${playText} de la chanson française !`;
+      break;
+    }
+
+    case 'party': {
+      text += ` && ${playText} (un truc|quelque chose) qui bouge !`;
+      break;
+    }
+
     case 'golden age': {
-      text += ` && ${playText} du bon [vieux] rap !`;
+      text += ` && ${playText} du bon [vieux] rap [français]!`;
+      break;
+    }
+
+    case 'golden us': {
+      text += ` && ${playText} du bon [vieux] rap americain!`;
       break;
     }
 
     case 'rap posé': {
-      text += ` && ${playText} du rap (posé|tranquille) !`;
+      text += ` && ${playText} (du rap|un truc) (cool|posé|tranquille) !`;
       break;
     }
 

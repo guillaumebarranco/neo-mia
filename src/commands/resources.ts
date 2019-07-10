@@ -1,4 +1,4 @@
-export const customIncludes = (userSaid, commandUserSaid) => {
+export const customIncludes = (userSaid: string[], commandUserSaid: string) => {
   if (userSaid.includes(commandUserSaid)) {
     return true;
   }
@@ -10,12 +10,12 @@ export const customIncludes = (userSaid, commandUserSaid) => {
     return false;
   }
 
-  let finalValue = false;
+  let finalValue: any = null;
 
-  userSaid.forEach(sentence => {
+  userSaid.forEach((sentence: string) => {
     const words = sentence.split(' ');
 
-    words.forEach(word => {
+    words.forEach((word: string) => {
       if (
         sentence.replace(word, variablesInCommand[0]).includes(commandUserSaid)
       ) {
@@ -30,21 +30,21 @@ export const customIncludes = (userSaid, commandUserSaid) => {
   return finalValue;
 };
 
-function doThisAgain(commands) {
+function doThisAgain(commands: any): any {
   return makeCommandsFromMultipleText(commands);
 }
 
-export const makeCommandsFromMultipleText = commands => {
+export const makeCommandsFromMultipleText = (commands: any) => {
   // First we create new commands for commands having multiple sentences possibles
   // First sentence && second sentence for command 'launch that'
   // Become First sentence => 'launch that'; Second sentence => 'launch that' (2 commands)
   const waysToSayPattern = ' && ';
-  const commands2 = Object.keys(commands).reduce((memo, key) => {
+  const commands2 = Object.keys(commands).reduce((memo: any, key: any) => {
     const command = commands[key];
 
     if (key.includes(waysToSayPattern)) {
       const waysToSay = key.split(waysToSayPattern);
-      waysToSay.forEach(way => {
+      waysToSay.forEach((way: any) => {
         memo[way] = command;
       });
     } else {
@@ -59,7 +59,7 @@ export const makeCommandsFromMultipleText = commands => {
   // Bring me a good tea; Bring me a tea (2 commands)
   const waysToHaveOptionnalWord = /\[([^\]]+)]/;
   const patternToReplaceOptionnal = 'pdbq';
-  const commands3 = Object.keys(commands2).reduce((memo, key) => {
+  const commands3 = Object.keys(commands2).reduce((memo: any, key: any) => {
     const command = commands2[key];
     const resultsFromRegex = key.match(waysToHaveOptionnalWord);
 
@@ -92,12 +92,12 @@ export const makeCommandsFromMultipleText = commands => {
   // Then we create new commands for commands having multiple words in same sentence
   const waysToHaveMultipleWords = /\(([^)]+)\)/g;
   const patternToReplaceMultiple = 'adbc';
-  const commands4 = Object.keys(commands3).reduce((memo, key) => {
+  const commands4 = Object.keys(commands3).reduce((memo: any, key: any) => {
     const command = commands3[key];
     const resultsFromRegex = key.match(waysToHaveMultipleWords);
 
     if (resultsFromRegex) {
-      resultsFromRegex.forEach(element => {
+      resultsFromRegex.forEach((element: any) => {
         const toRemoveFromSentence = element;
         const sentenceWithoutWords = key.replace(
           toRemoveFromSentence,
@@ -109,7 +109,7 @@ export const makeCommandsFromMultipleText = commands => {
           .replace(')', '')
           .split('|');
 
-        waysToSay.forEach(way => {
+        waysToSay.forEach((way: any) => {
           memo[
             sentenceWithoutWords.replace(patternToReplaceMultiple, way)
           ] = command;
@@ -124,7 +124,7 @@ export const makeCommandsFromMultipleText = commands => {
 
   let needToDoThisAgain = false;
 
-  Object.keys(commands4).forEach(key => {
+  Object.keys(commands4).forEach((key: any) => {
     if (
       key.match(waysToHaveMultipleWords) ||
       key.match(waysToHaveOptionnalWord)
@@ -137,7 +137,7 @@ export const makeCommandsFromMultipleText = commands => {
     return doThisAgain(commands4);
   }
 
-  const finalCommands = Object.keys(commands4).reduce((memo, key) => {
+  const finalCommands = Object.keys(commands4).reduce((memo: any, key: any) => {
     memo[key] = commands4[key];
     memo[`Mia ${key}`] = commands4[key];
     return memo;

@@ -1,11 +1,16 @@
-import { audioCommands, customAudioCommands } from './audio';
 import { apiCommands, getSonerezhCommands } from './api';
+import { audioCommands, customAudioCommands } from './audio';
 
 export const test = '';
 
-const commands = [];
+const commands: any[] = [];
 
-function generateCommand(content, userSaid, type = 'audio', emotion = false) {
+function generateCommand(
+  content: any,
+  userSaid: any,
+  type = 'audio',
+  emotion = false
+) {
   return {
     content,
     userSaid,
@@ -15,7 +20,7 @@ function generateCommand(content, userSaid, type = 'audio', emotion = false) {
 }
 
 function addCommandsFromObject(
-  commandsObject,
+  commandsObject: any,
   type = 'audio',
   emotion = false
 ) {
